@@ -86,16 +86,12 @@ const updateArticle = async (req, res) => {
     article.category = category;
     if (req.file) {
       // Delete old image if exists
-      if (article.image) {
-        const oldImagePath = path.join(
-          __dirname,
-          "../public/uploads",
-          article.image
-        );
-        fs.unlink(oldImagePath, (err) => {
-          // Ignore error if file does not exist
-        });
-      }
+      const oldImagePath = path.join(
+        __dirname,
+        "../public/uploads",
+        article.image
+      );
+      fs.unlinkSync(oldImagePath);
       article.image = req.file.filename;
     }
     await article.save();
@@ -117,18 +113,17 @@ const deleteArticle = async (req, res) => {
       }
     }
     // Delete image file from server
-    if (article.image) {
-      const imagePath = path.join(
+    try {
+      const oldImagePath = path.join(
         __dirname,
         "../public/uploads",
         article.image
       );
-      fs.unlink(imagePath, (err) => {
-        if (err) {
-          console.error("Error deleting image:", err);
-        }
-      });
+      fs.unlinkSync(oldImagePath);
+    } catch (error) {
+      console.error(error);
     }
+
     await article.deleteOne();
     res.json({ success: true });
   } catch (error) {

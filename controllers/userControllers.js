@@ -1,7 +1,11 @@
 const userModel = require("../models/User");
+const newsModel = require("../models/News");
+const categoryModel = require("../models/Category");
+
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const dotenv = require("dotenv");
+const Setting = require("../models/Setting");
 dotenv.config();
 
 const loginPage = async (req, res) => {
@@ -33,11 +37,54 @@ const adminLogin = async (req, res) => {
 };
 
 const dashboard = async (req, res) => {
-  res.render("admin/dashboard", { role: req.role, fullname: req.fullname });
+  try {
+    let articleCount;
+    if (req.role == "author") {
+      articleCount = await newsModel.countDocuments({ author: req.id });
+    } else {
+      articleCount = await newsModel.countDocuments();
+    }
+    const categoryCount = await categoryModel.countDocuments();
+    const userCount = await userModel.countDocuments();
+
+    res.render("admin/dashboard", {
+      role: req.role,
+      fullname: req.fullname,
+      articleCount,
+      categoryCount,
+      userCount,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send("Internal Server Error");
+  }
 };
+
 const settings = async (req, res) => {
-  res.render("admin/settings", { role: req.role });
+  try {
+    const settings = await Setting.findOne();
+    res.render("admin/settings", { role: req.role, settings });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Internal Server Error");
+  }
 };
+const saveSettings = async (req, res) => {
+  const { website_title, footer_description } = req.body;
+  const website_logo = req.file ? req.file.filename : null;
+  try {
+    const settings = await Setting.findOneAndUpdate(
+      {},
+      { website_title, website_logo, footer_description },
+      { new: true, upsert: true }
+    );
+    res.redirect("/admin/settings");
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Internal Server Error");
+  }
+};
+
 const logout = async (req, res) => {
   res.clearCookie("token");
   res.redirect("/admin");
@@ -115,4 +162,5 @@ module.exports = {
   updateUser,
   deleteUser,
   settings,
+  saveSettings,
 };

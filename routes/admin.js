@@ -17,6 +17,13 @@ router.post("/index", userControllers.adminLogin);
 router.get("/logout", userControllers.logout);
 router.get("/dashboard", isLoggedIn, userControllers.dashboard);
 router.get("/settings", isLoggedIn, isAdmin, userControllers.settings);
+router.post(
+  "/save-settings",
+  isLoggedIn,
+  isAdmin,
+  upload.single("website_logo"),
+  userControllers.saveSettings
+);
 
 // user CRUD Routes
 router.get("/users", isLoggedIn, isAdmin, userControllers.allUser);
