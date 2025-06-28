@@ -3,27 +3,36 @@ const categoryModel = require("../models/Category");
 const userModel = require("../models/User");
 const fs = require("fs");
 const path = require("path");
+const createError = require("../utils/error-message");
 
-const allArticle = async (req, res) => {
-  let articles;
-  if (req.role === "admin") {
-    articles = await newsModel
-      .find()
-      .populate("category", "name")
-      .populate("author", "fullname");
-  } else {
-    articles = await newsModel
-      .find({ author: req.id })
-      .populate("category", "name")
-      .populate("author", "fullname");
+const allArticle = async (req, res, next) => {
+  try {
+    let articles;
+    if (req.role === "admin") {
+      articles = await newsModel
+        .find()
+        .populate("category", "name")
+        .populate("author", "fullname");
+    } else {
+      articles = await newsModel
+        .find({ author: req.id })
+        .populate("category", "name")
+        .populate("author", "fullname");
+    }
+    res.render("admin/articles", { role: req.role, articles });
+  } catch (error) {
+    next(error);
   }
-  res.render("admin/articles", { role: req.role, articles });
 };
-const addArticlePage = async (req, res) => {
-  const categories = await categoryModel.find();
-  res.render("admin/articles/create", { role: req.role, categories });
+const addArticlePage = async (req, res, next) => {
+  try {
+    const categories = await categoryModel.find();
+    res.render("admin/articles/create", { role: req.role, categories });
+  } catch (error) {
+    next(error);
+  }
 };
-const addArticle = async (req, res) => {
+const addArticle = async (req, res, next) => {
   try {
     const { title, content, category } = req.body;
     const article = new newsModel({
@@ -36,10 +45,10 @@ const addArticle = async (req, res) => {
     await article.save();
     res.redirect("/admin/article");
   } catch (error) {
-    res.status(500).send("Article Not Saved");
+    next(error);
   }
 };
-const updateArticlePage = async (req, res) => {
+const updateArticlePage = async (req, res, next) => {
   const id = req.params.id;
   try {
     const article = await newsModel
@@ -47,12 +56,12 @@ const updateArticlePage = async (req, res) => {
       .populate("category", "name")
       .populate("author", "fullname");
     if (!article) {
-      return res.status(404).send("Article Not Found");
+      return next(createError("Article Not Found", 404));
     }
 
     if (req.role == "author") {
       if (req.id != article.author._id) {
-        return res.status(401).send("Unauthorized");
+        return next(createError("Unauthorized", 401));
       }
     }
 
@@ -63,21 +72,21 @@ const updateArticlePage = async (req, res) => {
       categories,
     });
   } catch (error) {
-    res.status(500).send("Article Not Found");
+    next(error);
   }
 };
-const updateArticle = async (req, res) => {
+const updateArticle = async (req, res, next) => {
   const id = req.params.id;
   try {
     const { title, content, category } = req.body;
     const article = await newsModel.findById(id);
     if (!article) {
-      return res.status(404).send("Article Not Found");
+      return next(createError("Article Not Found", 404));
     }
 
     if (req.role == "author") {
       if (req.id != article.author._id) {
-        return res.status(401).send("Unauthorized");
+        return next(createError("Unauthorized", 401));
       }
     }
 
@@ -97,19 +106,19 @@ const updateArticle = async (req, res) => {
     await article.save();
     res.redirect("/admin/article");
   } catch (error) {
-    res.status(500).send("Article Not Updated");
+    next(error);
   }
 };
-const deleteArticle = async (req, res) => {
+const deleteArticle = async (req, res, next) => {
   const id = req.params.id;
   try {
     const article = await newsModel.findById(id);
     if (!article) {
-      return res.status(404).send("Article Not Found");
+      return next(createError("Article Not Found", 404));
     }
     if (req.role == "author") {
       if (req.id != article.author._id) {
-        return res.status(401).send("Unauthorized");
+        return next(createError("Unauthorized", 401));
       }
     }
     // Delete image file from server
@@ -127,7 +136,7 @@ const deleteArticle = async (req, res) => {
     await article.deleteOne();
     res.json({ success: true });
   } catch (error) {
-    res.status(500).send("Article Not Deleted");
+    next(error);
   }
 };
 

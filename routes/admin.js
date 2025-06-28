@@ -24,7 +24,6 @@ router.post(
   upload.single("website_logo"),
   userControllers.saveSettings
 );
-
 // user CRUD Routes
 router.get("/users", isLoggedIn, isAdmin, userControllers.allUser);
 router.get("/add-user", isLoggedIn, isAdmin, userControllers.addUserPage);
@@ -47,10 +46,8 @@ router.delete(
   isAdmin,
   userControllers.deleteUser
 );
-
 // Category CRUD Routes
 router.get("/category", isLoggedIn, isAdmin, categoryControllers.allCategory);
-
 router.get(
   "/add-category",
   isLoggedIn,
@@ -110,5 +107,46 @@ router.delete(
 
 // Comment Routes
 router.get("/comments", isLoggedIn, CommentControllers.allComments);
+
+//404 Error Middleware
+router.use(isLoggedIn, (req, res, next) => {
+  res.status(404).render("admin/404", {
+    message: "Page Not Found",
+    role: req.role,
+  });
+});
+
+//500 Error Middleware
+router.use(isLoggedIn, (err, req, res, next) => {
+  console.error(err.stack);
+  const status = err.status || 500;
+  let view;
+  switch (status) {
+    case 404:
+      view = "admin/404";
+      break;
+    case 401:
+      view = "admin/401";
+      break;
+    case 500:
+      view = "admin/500";
+      break;
+    default:
+      view = "admin/500";
+      break;
+  }
+  res.status(status).render(view, {
+    message: err.message || "Something Went Wrong",
+    role: req.role,
+  });
+});
+
+// router.use(isLoggedIn, (err, req, res, next) => {
+//   console.error(err.stack);
+//   res.status(500).render("admin/500", {
+//     message: err.message || "Internal Server Error",
+//     role: req.role,
+//   });
+// });
 
 module.exports = router;
