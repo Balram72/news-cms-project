@@ -1,5 +1,6 @@
 # My Node.js Project
 
+Porject Name :- News Blog App
 This is a Node.js application that does something useful.  
 Describe your project briefly here.
 
@@ -14,7 +15,7 @@ Describe your project briefly here.
 
 - **Backend**: Node.js, Express
 - **Database**: MongoDB
-- **Other**: dotenv, nodemon
+- **Other**: dotenv, nodemon,jsonwebtoken,express-ejs-layouts,cookie-parser,bcryptjs,multer,tabulator-tables,slugify
 - **frontend**:ejs
 
 ## 🔧 Installation
