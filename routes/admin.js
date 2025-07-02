@@ -10,11 +10,12 @@ const articleControllers = require("../controllers/articleControllers");
 const isLoggedIn = require("../middleware/isLoggedin");
 const isAdmin = require("../middleware/isAdmin");
 const upload = require("../middleware/multer");
+const isValid = require("../middleware/validation");
 
 //login Routes
 router.get("/", userControllers.loginPage);
-router.post("/index", userControllers.adminLogin);
-router.get("/logout", userControllers.logout);
+router.post("/index", isValid.loginValidation, userControllers.adminLogin);
+router.get("/logout", isLoggedIn, userControllers.logout);
 router.get("/dashboard", isLoggedIn, userControllers.dashboard);
 router.get("/settings", isLoggedIn, isAdmin, userControllers.settings);
 router.post(
@@ -27,7 +28,13 @@ router.post(
 // user CRUD Routes
 router.get("/users", isLoggedIn, isAdmin, userControllers.allUser);
 router.get("/add-user", isLoggedIn, isAdmin, userControllers.addUserPage);
-router.post("/add-user", isLoggedIn, isAdmin, userControllers.addUser);
+router.post(
+  "/add-user",
+  isLoggedIn,
+  isAdmin,
+  isValid.UserValidation,
+  userControllers.addUser
+);
 router.get(
   "/update-user/:id",
   isLoggedIn,
@@ -38,6 +45,7 @@ router.post(
   "/update-user/:id",
   isLoggedIn,
   isAdmin,
+  isValid.UserUpdateValidation,
   userControllers.updateUser
 );
 router.delete(
@@ -58,6 +66,7 @@ router.post(
   "/add-category",
   isLoggedIn,
   isAdmin,
+  isValid.categoryValidation,
   categoryControllers.addCategory
 );
 router.get(
@@ -70,6 +79,7 @@ router.post(
   "/update-category/:id",
   isLoggedIn,
   isAdmin,
+  isValid.categoryValidation,
   categoryControllers.updateCategory
 );
 router.delete(
@@ -86,6 +96,7 @@ router.post(
   "/add-article",
   isLoggedIn,
   upload.single("image"),
+  isValid.articleValidation,
   articleControllers.addArticle
 );
 router.get(
@@ -97,6 +108,7 @@ router.post(
   "/update-article/:id",
   isLoggedIn,
   upload.single("image"),
+  isValid.articleValidation,
   articleControllers.updateArticle
 );
 router.delete(
@@ -140,13 +152,5 @@ router.use(isLoggedIn, (err, req, res, next) => {
     role: req.role,
   });
 });
-
-// router.use(isLoggedIn, (err, req, res, next) => {
-//   console.error(err.stack);
-//   res.status(500).render("admin/500", {
-//     message: err.message || "Internal Server Error",
-//     role: req.role,
-//   });
-// });
 
 module.exports = router;
