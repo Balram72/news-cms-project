@@ -1,14 +1,63 @@
-<div id="admin-content">
-  <div class="container">
-    <div class="row">
-      <div class="col-md-12">
-        <h1 class="admin-heading">500: Internal Servel Error</h1>
-      </div>
-      <div class="col-md-12">
-        <h1>
-          <%= message %>
-        </h1>
-      </div>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>404-Error</title>
+  <style>
+    .error-container {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      background-color: #f8f9fa;
+    }
+
+    .error-content {
+      text-align: center;
+    }
+
+    .error-content h1 {
+      font-size: 6rem;
+      font-weight: bold;
+      margin-bottom: 1rem;
+    }
+
+    .error-content p {
+      font-size: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .lottie-animation {
+      max-width: 400px;
+      margin-bottom: 2rem;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="error-container">
+    <div class="lottie-animation"></div>
+    <div class="error-content">
+      <h1>500</h1>
+      <p>
+        <%= message %>
+      </p>
+      <a href="/admin/dashboard" class="btn btn-primary">Go Back To Home</a>
     </div>
   </div>
-</div>
+</body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.9.6/lottie.min.js"></script>
+<script>
+  const animation = lottie.loadAnimation({
+    container: document.querySelector('.lottie-animation'),
+    renderer: 'svg',
+    loop: true,
+    autoplay: true,
+    path: 'https://lottie.host/d987597c-7676-4424-8817-7fca6dc1a33e/BVrFXsaeui.json'
+  });
+</script>
+
+</html>
