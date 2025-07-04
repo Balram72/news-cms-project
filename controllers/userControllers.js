@@ -19,6 +19,7 @@ const loginPage = async (req, res) => {
   });
 };
 
+
 const adminLogin = async (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
