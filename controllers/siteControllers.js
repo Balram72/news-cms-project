@@ -4,6 +4,7 @@ const newsModel = require("../models/News");
 const categoryModel = require("../models/Category");
 const userModel = require("../models/User");
 const commentModel = require("../models/Comment");
+const settingModel = require("../models/Setting");
 // const createError = require("../utils/error-message");
 // const { validationResult } = require("express-validator");
 
@@ -13,10 +14,8 @@ exports.index = async (req, res) => {
     .populate("category", { name: 1, slug: 1 }) // _id: 0 => not show id
     .populate("author", "fullname") // _id: 0 => not show id
     .sort({ createAt: -1 });
-  const categoryInUse = await newsModel.distinct("category");
-  const categories = await categoryModel.find({ _id: { $in: categoryInUse } });
-  // res.json({ news, categories });
-  res.render("index", { news, categories });
+
+  res.render("index", { news });
 };
 exports.articleByCategories = async (req, res) => {
   const category = await categoryModel.findOne({ slug: req.params.name });
@@ -30,10 +29,7 @@ exports.articleByCategories = async (req, res) => {
     .populate("category", { name: 1, slug: 1 }) // _id: 0 => not show id
     .populate("author", "fullname") // _id: 0 => not show id
     .sort({ createAt: -1 });
-  const categoryInUse = await newsModel.distinct("category");
-  const categories = await categoryModel.find({ _id: { $in: categoryInUse } });
-  // res.json({ news, categories });
-  res.render("category", { news, categories, category });
+  res.render("category", { news, category });
 };
 exports.singleArticle = async (req, res) => {
   const singleNews = await newsModel
@@ -41,9 +37,7 @@ exports.singleArticle = async (req, res) => {
     .populate("category", { name: 1, slug: 1 }) // _id: 0 => not show id
     .populate("author", "fullname") // _id: 0 => not show id
     .sort({ createAt: -1 });
-  const categoryInUse = await newsModel.distinct("category");
-  const categories = await categoryModel.find({ _id: { $in: categoryInUse } });
-  res.render("single", { singleNews, categories });
+  res.render("single", { singleNews });
 };
 exports.search = async (req, res) => {
   const searchQuery = req.query.search;
@@ -57,26 +51,19 @@ exports.search = async (req, res) => {
     .populate("category", { name: 1, slug: 1 }) // _id: 0 => not show id
     .populate("author", "fullname") // _id: 0 => not show id
     .sort({ createAt: -1 });
-  const categoryInUse = await newsModel.distinct("category");
-  const categories = await categoryModel.find({ _id: { $in: categoryInUse } });
-  res.render("search", { news, categories, searchQuery });
+
+  res.render("search", { news, searchQuery });
 };
 exports.author = async (req, res) => {
   const author = await userModel.findOne({ _id: req.params.name });
   if (!author) {
     return res.status(404).send("Author not found");
   }
-
   const news = await newsModel
     .find({ author: req.params.name })
     .populate("category", { name: 1, slug: 1 }) // _id: 0 => not show id
     .populate("author", "fullname") // _id: 0 => not show id
     .sort({ createAt: -1 });
-
-  const categoryInUse = await newsModel.distinct("category");
-  const categories = await categoryModel.find({ _id: { $in: categoryInUse } });
-
-  // res.json({ news, categories });
-  res.render("author", { news, categories, author });
+  res.render("author", { news, author });
 };
 exports.addComment = async (req, res) => {};

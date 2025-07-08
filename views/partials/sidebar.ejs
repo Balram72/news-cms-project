@@ -15,91 +15,36 @@
   <!-- recent posts box -->
   <div class="recent-post-container">
     <h4>Recent Posts</h4>
-    <div class="recent-post">
-      <a class="post-img" href="">
-        <img src="images/post-format.jpg" alt="" />
-      </a>
-      <div class="post-content">
-        <h5><a href="single.html">Lorem ipsum dolor sit amet</a></h5>
-        <span>
-          <i class="fa fa-tags" aria-hidden="true"></i>
-          <a href='category.html'>Html</a>
-        </span>
-        <span>
-          <i class="fa fa-calendar" aria-hidden="true"></i>
-          01 Nov, 2025
-        </span>
-        <a class="read-more" href="single.html">read more</a>
+    <% latestNews.forEach(function(news) { %>
+      <div class="recent-post">
+        <a class="post-img" href="/single/<%= news._id %>">
+          <img src="/uploads/<%= news.image %>" alt="<%= news.title %>" />
+        </a>
+        <div class="post-content">
+          <h5><a href="/single/<%= news._id %>">
+              <%= news.title %>
+            </a></h5>
+          <span>
+            <i class="fa fa-tags" aria-hidden="true"></i>
+            <a href="/category/<%= news.category.slug %>">
+              <%= news.category.name %>
+            </a>
+          </span>
+          <span>
+            <i class="fa fa-user" aria-hidden="true"></i>
+            <a href='/author/<%= news.author._id %>'>
+              <%= news.author.fullname %>
+            </a>
+          </span>
+          <span>
+            <i class="fa fa-calendar" aria-hidden="true"></i>
+            <%= new Date(news.createAt).toLocaleDateString('en-GB', { weekday: 'short' , day: '2-digit' , month: 'long'
+              , year: 'numeric' }) %>
+          </span>
+          <a class="read-more" href="/single/<%= news._id %>">read more</a>
+        </div>
       </div>
-    </div>
-    <div class="recent-post">
-      <a class="post-img" href="">
-        <img src="images/post_1.jpg" alt="" />
-      </a>
-      <div class="post-content">
-        <h5><a href="single.html">Lorem ipsum dolor sit amet</a></h5>
-        <span>
-          <i class="fa fa-tags" aria-hidden="true"></i>
-          <a href='category.html'>Html</a>
-        </span>
-        <span>
-          <i class="fa fa-calendar" aria-hidden="true"></i>
-          01 Nov, 2025
-        </span>
-        <a class="read-more" href="single.html">read more</a>
-      </div>
-    </div>
-    <div class="recent-post">
-      <a class="post-img" href="">
-        <img src="images/post-format.jpg" alt="" />
-      </a>
-      <div class="post-content">
-        <h5><a href="single.html">Lorem ipsum dolor sit amet</a></h5>
-        <span>
-          <i class="fa fa-tags" aria-hidden="true"></i>
-          <a href='category.html'>Html</a>
-        </span>
-        <span>
-          <i class="fa fa-calendar" aria-hidden="true"></i>
-          01 Nov, 2025
-        </span>
-        <a class="read-more" href="single.html">read more</a>
-      </div>
-    </div>
-    <div class="recent-post">
-      <a class="post-img" href="">
-        <img src="images/post_1.jpg" alt="" />
-      </a>
-      <div class="post-content">
-        <h5><a href="single.html">Lorem ipsum dolor sit amet</a></h5>
-        <span>
-          <i class="fa fa-tags" aria-hidden="true"></i>
-          <a href='category.html'>Html</a>
-        </span>
-        <span>
-          <i class="fa fa-calendar" aria-hidden="true"></i>
-          01 Nov, 2025
-        </span>
-        <a class="read-more" href="single.html">read more</a>
-      </div>
-    </div>
-    <div class="recent-post">
-      <a class="post-img" href="">
-        <img src="images/post-format.jpg" alt="" />
-      </a>
-      <div class="post-content">
-        <h5><a href="single.html">Lorem ipsum dolor sit amet</a></h5>
-        <span>
-          <i class="fa fa-tags" aria-hidden="true"></i>
-          <a href='category.html'>Html</a>
-        </span>
-        <span>
-          <i class="fa fa-calendar" aria-hidden="true"></i>
-          01 Nov, 2025
-        </span>
-        <a class="read-more" href="single.html">read more</a>
-      </div>
-    </div>
+      <% }); %>
   </div>
   <!-- /recent posts box -->
 </div>
