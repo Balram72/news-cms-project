@@ -3,7 +3,6 @@ const router = express.Router();
 
 const siteControllers = require("../controllers/siteControllers");
 const loadCommonData = require("../middleware/loadCommonData");
-
 router.use(loadCommonData);
 
 router.get("/", siteControllers.index);
