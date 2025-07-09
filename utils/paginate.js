@@ -1,5 +1,5 @@
 const paginate = async (model, query = {}, reqQuery = {}, options = {}) => {
-  const { page = 1, limit = 2, sort = "-createAt" } = reqQuery;
+  const { page = 1, limit = 1, sort = "-createAt" } = reqQuery;
   const paginationOption = {
     page: parseInt(page),
     limit: parseInt(limit),
@@ -10,7 +10,7 @@ const paginate = async (model, query = {}, reqQuery = {}, options = {}) => {
     const result = await model.paginate(query, paginationOption);
     return {
       data: result.docs,
-      lastPage: result.lastPage,
+      prevPage: result.prevPage,
       nextPage: result.nextPage,
       hasNextPage: result.hasNextPage,
       hasPrevPage: result.hasPrevPage,

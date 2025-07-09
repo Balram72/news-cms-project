@@ -42,20 +42,22 @@
       </div>
     </div>
     <% }); %>
-      <nav>
-        <ul class="pagination">
-          <li class="page-item <%= paginatedNews.currentPage === 1 ? 'disabled' : '' %>">
-            <a class="page-link" href="?page=<%= paginatedNews.currentPage - 1 %>">Previous</a>
-          </li>
-          <% for(let i=1; i <=paginatedNews.totalPages; i++) { %>
-            <li class="page-item <%= paginatedNews.currentPage === i ? 'active' : '' %>">
-              <a class="page-link" href="?page=<%= i %>">
-                <%= i %>
-              </a>
+      <% function buildQuery(query, page) { const params=new URLSearchParams(query); params.set('page', page);
+        return '?' + params.toString(); } %>
+        <nav>
+          <ul class="pagination">
+            <li class="page-item <%= paginatedNews.currentPage === 1 ? 'disabled' : '' %>">
+              <a class="page-link" href="<%= buildQuery(query,paginatedNews.currentPage - 1) %>">Previous</a>
             </li>
-            <% } %>
-              <li class="page-item <%= paginatedNews.currentPage === paginatedNews.totalPages ? 'disabled' : '' %>">
-                <a class="page-link" href="?page=<%= paginatedNews.currentPage + 1 %>">Next</a>
+            <% for(let i=1; i <=paginatedNews.totalPages; i++) { %>
+              <li class="page-item <%= paginatedNews.currentPage === i ? 'active' : '' %>">
+                <a class="page-link" href="<%= buildQuery(query,i) %>">
+                  <%= i %>
+                </a>
               </li>
-        </ul>
-      </nav>
+              <% } %>
+                <li class="page-item <%= paginatedNews.currentPage === paginatedNews.totalPages ? 'disabled' : '' %>">
+                  <a class="page-link" href="<%= buildQuery(query,paginatedNews.currentPage + 1) %>">Next</a>
+                </li>
+          </ul>
+        </nav>
