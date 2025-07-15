@@ -117,6 +117,8 @@ router.delete(
   articleControllers.deleteArticle
 );
 
+
+
 // Comment Routes
 router.get("/comments", isLoggedIn, CommentControllers.allComments);
 router.put(
@@ -129,6 +131,10 @@ router.delete(
   isLoggedIn,
   CommentControllers.deleteComment
 );
+
+
+
+
 
 //404 Error Middleware
 router.use(isLoggedIn, (req, res, next) => {
