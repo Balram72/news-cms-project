@@ -10,6 +10,6 @@ router.get("/category/:name", siteControllers.articleByCategories);
 router.get("/single/:id", siteControllers.singleArticle);
 router.get("/search", siteControllers.search);
 router.get("/author/:name", siteControllers.author);
-router.post("/single/:id", siteControllers.addComment);
+router.post("/single/:id/comment", siteControllers.addComment);
 
 module.exports = router;
