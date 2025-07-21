@@ -92,7 +92,7 @@ exports.articleValidation = [
     .trim()
     .notEmpty()
     .withMessage("Content is required")
-    .isLength({ min: 20, max: 1500 })
+    .isLength({ min: 20 })
     .withMessage("Content must be 20 to 1500 characters long"),
   body("category").trim().notEmpty().withMessage("Category is required"),
   // body("image").custom((value, { req }) => {

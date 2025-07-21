@@ -9,8 +9,8 @@ const expressEjsLayouts = require("express-ejs-layouts");
 require("dotenv").config();
 
 // Middleware
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(express.json({ limit: "20mb" }));
+app.use(express.urlencoded({ extended: true, limit: "20mb" }));
 app.use(express.static(path.join(__dirname, "public")));
 app.use(cookieParser());
 app.use(experessLayouts);
@@ -23,7 +23,6 @@ mongose.connect(process.env.MONGODB_URI);
 
 //Routes
 app.set("layout", "layout");
-app.use("/", require("./routes/frontend"));
 
 app.use("/admin", (req, res, next) => {
   res.locals.layout = "admin/layout";
@@ -31,6 +30,8 @@ app.use("/admin", (req, res, next) => {
 });
 
 app.use("/admin", require("./routes/admin"));
+
+app.use("/", require("./routes/frontend"));
 
 app.listen(3000, () => {
   console.log("Server is running on port 3000");

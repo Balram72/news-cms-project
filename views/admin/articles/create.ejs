@@ -61,4 +61,11 @@
           height: 200
         });
       });
+      //code  to remove field "file" use sumernote
+      document.querySelector('form').addEventListener('submit', function (event) {
+        const unwantedField = document.querySelector('input[name="files"]');
+        if (unwantedField) {
+          unwantedField.remove();
+        }
+      });
     </script>

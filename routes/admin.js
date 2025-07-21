@@ -133,9 +133,6 @@ router.delete(
 );
 
 
-
-
-
 //404 Error Middleware
 router.use(isLoggedIn, (req, res, next) => {
   res.status(404).render("admin/404", {
